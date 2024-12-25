@@ -78,7 +78,7 @@ export default async function handler(req, res) {
             hasMoreData = false; // В случае ошибки завершаем цикл
         }
     }
-    const result = allNotes// filterUsers(allNotes)
+    const result = allNotes.map(e => e.id_user === 9287458)// filterUsers(allNotes)
 
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
