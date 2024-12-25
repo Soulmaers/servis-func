@@ -47,10 +47,10 @@ async function handler(req, res) {
     const result = filterUsers(allNotes)
     console.log(result)
     // console.log(result)
-    // res.setHeader('Access-Control-Allow-Origin', '*');
-    // res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    // res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-    // res.json(result);
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.json(result);
 }
 
 function filterUsers(allNotes) {
