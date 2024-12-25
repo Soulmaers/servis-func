@@ -1,4 +1,4 @@
-export default async function handler(req, res) {
+/*export default async function handler(req, res) {
 
 
     const entity_id = 30921211
@@ -30,7 +30,7 @@ export default async function handler(req, res) {
     } catch (error) {
         res.status(500).json(error);
     }
-}
+}*/
 
 
 async function fetchNotes(page, time) {
