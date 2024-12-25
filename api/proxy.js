@@ -78,7 +78,7 @@ export default async function handler(req, res) {
             hasMoreData = false; // В случае ошибки завершаем цикл
         }
     }
-    const cv = allNotes.map(e => e.id_user == 9287458)
+    const cv = allNotes.filter(e => e.id_user == 9287458)
     const result = cv // filterUsers(allNotes)
 
     res.setHeader('Access-Control-Allow-Origin', '*');
