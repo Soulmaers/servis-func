@@ -61,7 +61,7 @@ export default async function handler(req, res) {
     while (hasMoreData) {
         try {
             const data = await fetchNotes(page, time);
-            const array = data._embedded.notes.filter(e => e.type === 'incoming_call' || e.type === 'outgoing_call').map(it => {
+            const array = data._embedded.events.filter(e => e.type === 'incoming_call' || e.type === 'outgoing_call').map(it => {
                 return ({
                     id_user: it.created_by,
                     timecalls: it.created_at,
@@ -70,7 +70,7 @@ export default async function handler(req, res) {
             })
             allNotes.push(...array); // Добавляем новые записи в общий массив
             // Проверяем, есть ли следующая страница
-            hasMoreData = data._embedded.notes.length === 250;
+            hasMoreData = data._embedded.events.length === 250;
             page++;
         } catch (error) {
             console.error(error);
