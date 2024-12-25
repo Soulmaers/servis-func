@@ -78,7 +78,8 @@ export default async function handler(req, res) {
             hasMoreData = false; // В случае ошибки завершаем цикл
         }
     }
-    const result = allNotes.map(e => e.id_user === 9287458)// filterUsers(allNotes)
+    const cv = allNotes.map(e => e.id_user == 9287458)
+    const result = cv // filterUsers(allNotes)
 
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
