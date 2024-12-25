@@ -22,7 +22,7 @@ export default async function handler(req, res) {
         // Парсим ответ в формате JSON
         const data = await response.json();
         //    console.log(F); // Выводим данные в консоль
-        console.log(data)
+        console.log(data._embedded)
         res.setHeader('Access-Control-Allow-Origin', '*');
         res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
         res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
