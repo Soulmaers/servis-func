@@ -1,4 +1,4 @@
-/*export default async function handler(req, res) {
+export default async function handler(req, res) {
 
 
     const entity_id = 30921211
@@ -30,7 +30,7 @@
     } catch (error) {
         res.status(500).json(error);
     }
-}*/
+}
 
 
 async function fetchNotes(page, time) {
@@ -78,7 +78,7 @@ export default async function handler(req, res) {
             hasMoreData = false; // В случае ошибки завершаем цикл
         }
     }
-    const result = filterUsers(allNotes)
+    const result = allNotes//filterUsers(allNotes)
 
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
