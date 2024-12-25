@@ -1,4 +1,4 @@
-export default async function handler(req, res) {
+/*export default async function handler(req, res) {
 
 
     const entity_id = 30921211
@@ -30,7 +30,7 @@ export default async function handler(req, res) {
     } catch (error) {
         res.status(500).json(error);
     }
-}
+}*/
 
 
 async function fetchNotes(page, time) {
@@ -49,7 +49,7 @@ async function fetchNotes(page, time) {
     return await response.json();
 }
 
-/*
+
 export default async function handler(req, res) {
     const now = new Date(); // Текущее время
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()); // Сегодняшняя дата в 00:00:00
@@ -113,4 +113,4 @@ function processCalls(notes) {
         }
     }
     return users
-}*/
+}
