@@ -103,14 +103,14 @@ function processCalls(notes) {
         9158418: { calls: 0, calls30: 0, calls60: 0 },
     }
 
-    /*for (let i = 0; i < notes.length; i++) {
+    for (let i = 0; i < notes.length; i++) {
         users[notes[i].id_user].calls++
-        if (notes[i].duration > 30) {
-            users[notes[i].id_user].calls30++
-        }
-        if (notes[i].duration > 60) {
-            users[notes[i].id_user].calls60++
-        }
-    }*/
+        /*  if (notes[i].duration > 30) {
+              users[notes[i].id_user].calls30++
+          }
+          if (notes[i].duration > 60) {
+              users[notes[i].id_user].calls60++
+          }*/
+    }
     return users
 }
