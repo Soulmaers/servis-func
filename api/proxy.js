@@ -70,7 +70,7 @@ export default async function handler(req, res) {
             })
             allNotes.push(...array); // Добавляем новые записи в общий массив
             // Проверяем, есть ли следующая страница
-            hasMoreData = data._embedded.notes.length === 250;
+            hasMoreData = data._embedded.events.length === 250;
             page++;
         } catch (error) {
             console.error(error);
