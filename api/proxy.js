@@ -33,10 +33,9 @@
 }*/
 
 
-
 async function fetchNotes(page, time) {
-    //  const url = `https://info7licenzeru.amocrm.ru/api/v4/contacts/notes?filter[updated_at]=${time}&page=${page}&limit=250`;
-    const url = `https://info7licenzeru.amocrm.ru/api/v4/events?filter[created_at]=${time}&filter[type][]=incoming_call&filter[type][]=outgoing_call&page=${page}&limit=250`;
+    const url = `https://info7licenzeru.amocrm.ru/api/v4/contacts/notes?filter[updated_at]=${time}&page=${page}&limit=250`;
+
     const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImQxMWNiMDNlNmFkOWNhYjE4YmI1MDIxNTMxNTBmNmNlMmM5ZTcxZDEwZWUzOWMwYzY0ZjU2ZDE1YmE4NGI0ZmFkYTNhNGI4NTZhMjU4NjQyIn0.eyJhdWQiOiJiMzdhZWM0Yi1kZmUyLTQ0OTAtYmZkYy00NDI2MTczZjI0ZjUiLCJqdGkiOiJkMTFjYjAzZTZhZDljYWIxOGJiNTAyMTUzMTUwZjZjZTJjOWU3MWQxMGVlMzljMGM2NGY1NmQxNWJhODRiNGZhZGEzYTRiODU2YTI1ODY0MiIsImlhdCI6MTczNTAzOTM3NywibmJmIjoxNzM1MDM5Mzc3LCJleHAiOjE4OTI0MTkyMDAsInN1YiI6Ijc2MjIyNjAiLCJncmFudF90eXBlIjoiIiwiYWNjb3VudF9pZCI6Mjk4MTI2MzAsImJhc2VfZG9tYWluIjoiYW1vY3JtLnJ1IiwidmVyc2lvbiI6Miwic2NvcGVzIjpbImNybSJdLCJoYXNoX3V1aWQiOiIwMDMzNGExYi1mMmFjLTRiZTctYTJhNi1kMzc0ZTYwMjQ1Y2MiLCJhcGlfZG9tYWluIjoiYXBpLWIuYW1vY3JtLnJ1In0.ey9CRrqGkvgAQubREQcUgiWVWbNieXXqbBA9Mc3-mZhxstjDQ2v5eO46j195jkn5oEe4LvkX0Lw_JJfUlAtsSNYJGvf-_-knB2H4VZx2c-6Axv_HOltMj79ZL2lX1ulUv4cQ20lIwQdf2sJZVvR0A5133DPskfubdN8YXNdaiF76W6120UxWB2vCCawHskV2o0FZpJux-WqSzpSpevm4LwCXybtxu9oJ8KJ__FfCFuH-Wj-hV2zgDit01FP1GpuFz6MhQ4tf3oosbu4ChaAIrVebC8LhLOV3_d-Dsi06Wp9Ccb6LmpbMRkN1_l25lcVt1BlnMkm5T4OhqDeVDd-BrA'
     const response = await fetch(url, {
         method: 'GET',
@@ -51,7 +50,8 @@ async function fetchNotes(page, time) {
     return await response.json();
 }
 
-async function handler(req, res) {
+
+export default async function handler(req, res) {
     const now = new Date(); // Текущее время
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()); // Сегодняшняя дата в 00:00:00
     const time = Math.floor(today.getTime() / 1000)
@@ -61,16 +61,18 @@ async function handler(req, res) {
     while (hasMoreData) {
         try {
             const data = await fetchNotes(page, time);
-            const array = data._embedded.events.map(it => {
+            const array = data._embedded.notes.filter(e => e.note_type === 'call_in' || e.note_type === 'call_out').map(it => {
                 return ({
-                    id_user: it.created_by,
-                    timecalls: it.created_at,
-                    type: it.type,
+                    id_user: it.updated_by,
+                    timecalls: it.updated_at,
+                    type: it.note_type,
+                    duration: it.params.duration,
+                    call_result: it.params.call_result
                 })
             })
             allNotes.push(...array); // Добавляем новые записи в общий массив
             // Проверяем, есть ли следующая страница
-            hasMoreData = data._embedded.events.length === 250;
+            hasMoreData = data._embedded.notes.length === 250;
             page++;
         } catch (error) {
             console.error(error);
@@ -78,8 +80,8 @@ async function handler(req, res) {
         }
     }
 
-
     const result = filterUsers(allNotes)
+
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -103,19 +105,14 @@ function processCalls(notes) {
         9158418: { calls: 0, calls30: 0, calls60: 0 },
     }
 
-    for (let i = 0; i < notes.length; i++) {
+    /*for (let i = 0; i < notes.length; i++) {
         users[notes[i].id_user].calls++
-        /*  if (notes[i].duration > 30) {
-              users[notes[i].id_user].calls30++
-          }
-          if (notes[i].duration > 60) {
-              users[notes[i].id_user].calls60++
-          }*/
-    }
+        if (notes[i].duration > 30) {
+            users[notes[i].id_user].calls30++
+        }
+        if (notes[i].duration > 60) {
+            users[notes[i].id_user].calls60++
+        }
+    }*/
     return users
 }
-
-
-
-
-
