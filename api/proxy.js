@@ -63,9 +63,9 @@ export default async function handler(req, res) {
             const data = await fetchNotes(page, time);
             const array = data._embedded.events.map(it => {
                 return ({
-                    id_user: it.updated_by,
-                    timecalls: it.updated_at,
-                    type: it.note_type,
+                    id_user: it.created_by,
+                    timecalls: it.created_at,
+                    type: it.type,
                 })
             })
             allNotes.push(...array); // Добавляем новые записи в общий массив
