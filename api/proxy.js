@@ -61,7 +61,7 @@ export default async function handler(req, res) {
     while (hasMoreData) {
         try {
             const data = await fetchNotes(page, time);
-            const array = data._embedded.notes.map(it => {
+            const array = data._embedded.notes.filter(e => e.created_at > time).map(it => {
                 return ({
                     id_user: it.created_by,
                     timecalls: it.created_at,
