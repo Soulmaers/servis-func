@@ -45,10 +45,9 @@ async function fetchNotes(page, time) {
         }
     });
     if (!response.ok) {
-        throw new Error(`Ошибка: ${response.status} ${response.statusText}`);
+        return [];
     }
-    const result = response.ok ? await response.json() : []
-    return result
+    return await response.json()
 }
 
 
