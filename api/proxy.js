@@ -47,7 +47,8 @@ async function fetchNotes(page, time) {
     if (!response.ok) {
         throw new Error(`Ошибка: ${response.status} ${response.statusText}`);
     }
-    return await response.json();
+    const result = response.ok ? await response.json() : []
+    return result
 }
 
 
