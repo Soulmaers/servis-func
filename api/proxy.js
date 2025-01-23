@@ -120,11 +120,8 @@ function processCalls(notes) {
 
 const express = require('express');
 const app = express();
-app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
-app.use(bodyParser.json({ limit: '50mb' }));
 const port = process.env.PORT || 3000;
 
-import { filterUsers } from "./filterUsers";
 
 async function fetchNotes(page, time) {
     const url = `https://info7licenzeru.amocrm.ru/api/v4/contacts/notes?&filter[note_type][]=call_out&filter[note_type][]=call_in&filter[updated_at]=${time}&page=${page}&limit=250`;
@@ -201,6 +198,34 @@ app.get('/', async (req, res) => {
         res.json([]);
     }
 });
+
+function filterUsers(allNotes) {
+    const usersId = [11859642, 10921330, 10916554, 8683795, 7983985, 9287458, 9158418]
+    const notes = allNotes.filter(e => usersId.includes(e.id_user));
+    return processCalls(notes)
+}
+function processCalls(notes) {
+    const users = {
+        11859642: { calls: 0, calls30: 0, calls60: 0 },
+        10921330: { calls: 0, calls30: 0, calls60: 0 },
+        10916554: { calls: 0, calls30: 0, calls60: 0 },
+        8683795: { calls: 0, calls30: 0, calls60: 0 },
+        7983985: { calls: 0, calls30: 0, calls60: 0 },
+        9287458: { calls: 0, calls30: 0, calls60: 0 },
+        9158418: { calls: 0, calls30: 0, calls60: 0 },
+    }
+
+    for (let i = 0; i < notes.length; i++) {
+        users[notes[i].id_user].calls++
+        if (notes[i].duration > 30) {
+            users[notes[i].id_user].calls30++
+        }
+        if (notes[i].duration > 60) {
+            users[notes[i].id_user].calls60++
+        }
+    }
+    return users
+}
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
