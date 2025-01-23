@@ -32,7 +32,7 @@
     }
 }*/
 
-
+/*
 async function fetchNotes(page, time) {
     // const url = `https://info7licenzeru.amocrm.ru/api/v4/contacts/notes?filter[updated_at]=${time}&page=${page}&limit=250`;
     const url = `https://info7licenzeru.amocrm.ru/api/v4/contacts/notes?&filter[note_type][]=call_out&filter[note_type][]=call_in&filter[updated_at]=${time}&page=${page}&limit=250`;
@@ -115,4 +115,91 @@ function processCalls(notes) {
         }
     }
     return users
+}*/
+
+
+const express = require('express');
+const app = express();
+const port = process.env.PORT || 3000;
+
+import { filterUsers } from "./filterUsers";
+
+async function fetchNotes(page, time) {
+    const url = `https://info7licenzeru.amocrm.ru/api/v4/contacts/notes?&filter[note_type][]=call_out&filter[note_type][]=call_in&filter[updated_at]=${time}&page=${page}&limit=250`;
+    const token = 'YOUR_TOKEN'; // Замените YOUR_TOKEN на ваш токен
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        if (!response.ok) {
+            console.error(`Ошибка: ${response.status} ${response.statusText}`);
+            return [];
+        }
+        const result = await response.json();
+        return result;
+
+    } catch (error) {
+        console.error("Ошибка при загрузке данных:", error);
+        return [];
+    }
 }
+
+
+app.get('/', async (req, res) => {
+    try {
+        const now = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const time = Math.floor(today.getTime() / 1000)
+        let page = 1;
+        let hasMoreData = true;
+        const allNotes = [];
+        while (hasMoreData) {
+            try {
+                const data = await fetchNotes(page, time);
+                if (data && data._embedded && data._embedded.notes) {
+                    const array = data._embedded.notes.filter(e => e.created_at > time).map(it => {
+                        return ({
+                            id_user: it.created_by,
+                            timecalls: it.created_at,
+                            type: it.note_type,
+                            duration: it.params.duration,
+                            call_result: it.params.call_result
+                        })
+                    })
+                    allNotes.push(...array);
+                    hasMoreData = data._embedded.notes.length === 250;
+                    page++;
+                } else {
+                    hasMoreData = false; // Завершаем цикл, если нет данных или данных нет нужной структуры
+                }
+            } catch (error) {
+                console.error("Ошибка в цикле загрузки данных:", error);
+                hasMoreData = false;
+            }
+
+        }
+
+        const result = filterUsers(allNotes)
+
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+        res.json(result);
+
+
+    } catch (error) {
+        console.error("Ошибка при выполнении handler:", error);
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+        res.json([]);
+    }
+});
+
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+});
