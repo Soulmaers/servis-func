@@ -120,11 +120,9 @@ function processCalls(notes) {
 
 const express = require('express');
 const app = express();
-app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
-app.use(bodyParser.json({ limit: '50mb' }));
+
 const port = process.env.PORT || 3000;
 
-import { filterUsers } from "./filterUsers";
 
 async function fetchNotes(page, time) {
     const url = `https://info7licenzeru.amocrm.ru/api/v4/contacts/notes?&filter[note_type][]=call_out&filter[note_type][]=call_in&filter[updated_at]=${time}&page=${page}&limit=250`;
