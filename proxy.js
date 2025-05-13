@@ -140,7 +140,7 @@ async function fetchNotes(page, time) {
             return [];
         }
         const result = await response.json();
-        console.log(result)
+        console.log(result._embedded.users)
         return result;
 
     } catch (error) {
