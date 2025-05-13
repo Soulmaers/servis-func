@@ -201,6 +201,7 @@ app.get('/', async (req, res) => {
 });
 
 function filterUsers(allNotes) {
+    console.log(allNotes)
     const usersId = [11859642, 10921330, 10916554, 8683795, 7983985, 9287458, 9158418]
     const notes = allNotes.filter(e => usersId.includes(e.id_user));
     return processCalls(notes)
