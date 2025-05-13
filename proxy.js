@@ -124,11 +124,11 @@ const port = process.env.PORT || 3000;
 
 
 async function fetchNotes(page, time) {
-    const urlu = `https://info7licenzeru.amocrm.ru/api/v4/users`;
+    // const urlu = `https://info7licenzeru.amocrm.ru/api/v4/users`;
     const url = `https://info7licenzeru.amocrm.ru/api/v4/contacts/notes?&filter[note_type][]=call_out&filter[note_type][]=call_in&filter[updated_at]=${time}&page=${page}&limit=250`;
     const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImQxMWNiMDNlNmFkOWNhYjE4YmI1MDIxNTMxNTBmNmNlMmM5ZTcxZDEwZWUzOWMwYzY0ZjU2ZDE1YmE4NGI0ZmFkYTNhNGI4NTZhMjU4NjQyIn0.eyJhdWQiOiJiMzdhZWM0Yi1kZmUyLTQ0OTAtYmZkYy00NDI2MTczZjI0ZjUiLCJqdGkiOiJkMTFjYjAzZTZhZDljYWIxOGJiNTAyMTUzMTUwZjZjZTJjOWU3MWQxMGVlMzljMGM2NGY1NmQxNWJhODRiNGZhZGEzYTRiODU2YTI1ODY0MiIsImlhdCI6MTczNTAzOTM3NywibmJmIjoxNzM1MDM5Mzc3LCJleHAiOjE4OTI0MTkyMDAsInN1YiI6Ijc2MjIyNjAiLCJncmFudF90eXBlIjoiIiwiYWNjb3VudF9pZCI6Mjk4MTI2MzAsImJhc2VfZG9tYWluIjoiYW1vY3JtLnJ1IiwidmVyc2lvbiI6Miwic2NvcGVzIjpbImNybSJdLCJoYXNoX3V1aWQiOiIwMDMzNGExYi1mMmFjLTRiZTctYTJhNi1kMzc0ZTYwMjQ1Y2MiLCJhcGlfZG9tYWluIjoiYXBpLWIuYW1vY3JtLnJ1In0.ey9CRrqGkvgAQubREQcUgiWVWbNieXXqbBA9Mc3-mZhxstjDQ2v5eO46j195jkn5oEe4LvkX0Lw_JJfUlAtsSNYJGvf-_-knB2H4VZx2c-6Axv_HOltMj79ZL2lX1ulUv4cQ20lIwQdf2sJZVvR0A5133DPskfubdN8YXNdaiF76W6120UxWB2vCCawHskV2o0FZpJux-WqSzpSpevm4LwCXybtxu9oJ8KJ__FfCFuH-Wj-hV2zgDit01FP1GpuFz6MhQ4tf3oosbu4ChaAIrVebC8LhLOV3_d-Dsi06Wp9Ccb6LmpbMRkN1_l25lcVt1BlnMkm5T4OhqDeVDd-BrA'
     try {
-        const response = await fetch(urlu, {
+        const response = await fetch(url, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -202,7 +202,7 @@ app.get('/', async (req, res) => {
 });
 
 function filterUsers(allNotes) {
-    const usersId = [11859642, 10921330, 10916554, 8683795, 7983985, 9287458, 9158418]
+    const usersId = [11859642, 10921330, 10916554, 8683795, 7983985, 9287458, 9158418, 12461638]
     const notes = allNotes.filter(e => usersId.includes(e.id_user));
     return processCalls(notes)
 }
@@ -215,6 +215,7 @@ function processCalls(notes) {
         7983985: { calls: 0, calls30: 0, calls60: 0 },
         9287458: { calls: 0, calls30: 0, calls60: 0 },
         9158418: { calls: 0, calls30: 0, calls60: 0 },
+        12461638: { calls: 0, calls30: 0, calls60: 0 },
     }
 
     for (let i = 0; i < notes.length; i++) {
