@@ -202,12 +202,13 @@ app.get('/', async (req, res) => {
 });
 
 function filterUsers(allNotes) {
-    const usersId = [11859642, 10921330, 10916554, 8683795, 7983985, 9287458, 9158418, 12461638]
+    const usersId = [13152098, 11859642, 10921330, 10916554, 8683795, 7983985, 9287458, 9158418, 12461638]
     const notes = allNotes.filter(e => usersId.includes(e.id_user));
     return processCalls(notes)
 }
 function processCalls(notes) {
     const users = {
+        13152098: { calls: 0, calls30: 0, calls60: 0 },
         11859642: { calls: 0, calls30: 0, calls60: 0 },
         10921330: { calls: 0, calls30: 0, calls60: 0 },
         10916554: { calls: 0, calls30: 0, calls60: 0 },
